@@ -1,0 +1,31 @@
+# Configuración Local y Secretos
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs/
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# PHP
+vendor/
+composer.phar
+composer.lock
+
+# Testing
+coverage/
+.phpunit.result.cache
+
+# Temporal
+tmp/
+cache/
+temp/

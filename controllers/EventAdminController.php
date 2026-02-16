@@ -7,7 +7,10 @@ require_once __DIR__ . '/../models/AuditLogModel.php';
 
 class EventAdminController {
   public static function index(): void {
-    require_role(['ADMIN']);
+    // Requerir autenticación y rol admin
+    require_auth();
+    require_role(ROLE_ADMIN);
+    
     $error = null;
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -41,9 +44,24 @@ class EventAdminController {
           'cupo' => $cupo,
           'estado' => $estado
         ]);
-        $u = current_user();
-        AuditLogModel::log('event_create', $u ? (int)$u['id'] : null, null, ['nombre' => $nombre]);
-        header('Location: ' . BASE_URL . '/admin_eventos.php');
+        
+        // Log de auditoría
+        Logger::getInstance()->info('Evento creado', [
+          'user_id' => PermissionManager::getCurrentUserId(),
+          'event_name' => $nombre,
+          'event_date' => $start->format('Y-m-d'),
+        ]);
+        
+        AuditLogModel::log([
+          'user_id' => PermissionManager::getCurrentUserId(),
+          'action' => 'create_event',
+          'action_type' => 'CREATE',
+          'resource' => 'events',
+          'new_data' => ['nombre' => $nombre, 'lugar' => $lugar],
+          'status' => 'success',
+        ]);
+        
+        header('Location: ' . BASE_URL . '/admin_eventos');
         exit;
       }
     }
