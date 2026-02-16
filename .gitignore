@@ -1,0 +1,37 @@
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+logs/
+*.log
+php-errors.log
+
+# Temporary files
+/tmp/
+*.tmp
+*.bak
+
+# Config files with sensitive data (create local copies)
+config/database.local.php
+
+# Dependencies (if using composer)
+/vendor/
+composer.phar
+composer.lock
+
+# User uploaded files
+uploads/*
+!uploads/.gitkeep
+
+# Cache
+cache/
+*.cache
+
+# System files
+Thumbs.db
+desktop.ini

@@ -1,0 +1,31 @@
+RewriteEngine On
+RewriteBase /AsitenciaEventos/
+
+# Protect sensitive files
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Prevent directory listing
+Options -Indexes
+
+# Protect config files
+<Files "config.php">
+    Order allow,deny
+    Deny from all
+</Files>
+
+<Files "database.php">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Force HTTPS (uncomment in production)
+# RewriteCond %{HTTPS} !=on
+# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# PHP security settings
+php_flag display_errors Off
+php_flag log_errors On
+php_value error_log ../logs/php-errors.log
