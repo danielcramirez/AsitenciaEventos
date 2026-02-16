@@ -272,8 +272,8 @@
                 <a href="/views/reports/index.php">Reportes</a>
                 <?php endif; ?>
                 <div class="user-info">
-                    <span class="user-name"><?php echo htmlspecialchars(get_current_user()['full_name']); ?></span>
-                    <span class="user-role"><?php echo htmlspecialchars(get_current_user()['role']); ?></span>
+                    <span class="user-name"><?php echo htmlspecialchars(get_logged_user()['full_name']); ?></span>
+                    <span class="user-role"><?php echo htmlspecialchars(get_logged_user()['role']); ?></span>
                     <a href="/views/auth/logout.php" class="btn btn-secondary" style="padding: 0.5rem 1rem;">Salir</a>
                 </div>
             </div>

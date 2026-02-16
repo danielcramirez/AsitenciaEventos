@@ -57,9 +57,9 @@ function is_logged_in() {
 }
 
 /**
- * Get current user
+ * Get current logged in user
  */
-function get_current_user() {
+function get_logged_user() {
     return $_SESSION['user'] ?? null;
 }
 
