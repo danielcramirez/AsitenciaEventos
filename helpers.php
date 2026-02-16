@@ -43,3 +43,48 @@ function generate_qr_base64(string $data): string {
     return '';
   }
 }
+
+function get_client_ip(): string {
+  $keys = ['HTTP_CF_CONNECTING_IP', 'HTTP_X_FORWARDED_FOR', 'REMOTE_ADDR'];
+  foreach ($keys as $k) {
+    if (!empty($_SERVER[$k])) {
+      $ip = trim(explode(',', (string)$_SERVER[$k])[0]);
+      if ($ip !== '') return $ip;
+    }
+  }
+  return '0.0.0.0';
+}
+
+function get_user_agent(): string {
+  return substr((string)($_SERVER['HTTP_USER_AGENT'] ?? ''), 0, 255);
+}
+
+function json_response(array $payload, int $code = 200): void {
+  http_response_code($code);
+  header('Content-Type: application/json');
+  echo json_encode($payload);
+  exit;
+}
+
+function render_error(string $message, int $code = 400): void {
+  http_response_code($code);
+  echo h($message);
+  exit;
+}
+
+function validate_email(string $email): bool {
+  return (bool)filter_var($email, FILTER_VALIDATE_EMAIL);
+}
+
+function validate_cedula(string $cedula): bool {
+  return (bool)preg_match('/^[0-9]{5,20}$/', $cedula);
+}
+
+function validate_name(string $name): bool {
+  return (bool)preg_match('/^[A-Za-z0-9 .\'-]{1,120}$/', $name);
+}
+
+function validate_phone(string $phone): bool {
+  if ($phone === '') return true;
+  return (bool)preg_match('/^[0-9+() -]{6,30}$/', $phone);
+}
