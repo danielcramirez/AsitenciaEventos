@@ -7,7 +7,7 @@ require_once __DIR__ . '/../models/AuditLogModel.php';
 
 class ReportController {
   public static function report(): void {
-    require_role(['ADMIN']);
+    require_role(ROLE_ADMIN);
     $event_id = (int)($_GET['event_id'] ?? 0);
 
     $event = EventModel::findById($event_id);
@@ -33,7 +33,7 @@ class ReportController {
   }
 
   public static function exportCsv(): void {
-    require_role(['ADMIN']);
+    require_role(ROLE_ADMIN);
     $event_id = (int)($_GET['event_id'] ?? 0);
 
     $sql = "

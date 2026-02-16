@@ -49,26 +49,26 @@ const TOKEN_MIN_LEN = 20;
 // ============================================
 // Permisos y Roles
 // ============================================
-const DEFAULT_ROLE = 'guest';
-const ROLE_ADMIN = 'admin';
-const ROLE_OPERATOR = 'operator';
-const ROLE_GUEST = 'guest';
+const DEFAULT_ROLE = 'ATTENDEE';
+const ROLE_ADMIN = 'ADMIN';
+const ROLE_OPERATOR = 'OPERATOR';
+const ROLE_GUEST = 'ATTENDEE';
 
 // Permisos por rol
 const ROLE_PERMISSIONS = [
-    'admin' => [
+    'ADMIN' => [
         'admin_eventos' => true,      // CRUD de eventos
         'reporte' => true,             // Ver reportes
         'export_csv' => true,          // Exportar CSV
         'puerta' => true,              // Check-in en puerta
         'consulta_qr' => true,         // Ver QR ajenos
     ],
-    'operator' => [
+    'OPERATOR' => [
         'puerta' => true,              // Check-in en puerta
         'reporte' => true,             // Ver reportes propios
         'consulta_qr' => false,        // No puede ver QR ajenos
     ],
-    'guest' => [
+    'ATTENDEE' => [
         'registrar' => true,           // Registrarse
         'consulta_qr' => true,         // Ver su QR
         'evento' => true,              // Ver evento

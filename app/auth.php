@@ -15,7 +15,11 @@ function require_login(): void {
   }
 }
 
-function require_role(array $roles): void {
+/**
+ * DEPRECATED: Usar PermissionManager::requireRole() desde app/permissions.php
+ * O la función global require_role(string $role) que se carga en bootstrap
+ */
+function require_role_legacy(array $roles): void {
   require_login();
   $u = current_user();
   if (!$u || !in_array($u['role'], $roles, true)) {
@@ -26,6 +30,11 @@ function require_role(array $roles): void {
 }
 
 function login_user(array $user): void {
+  $_SESSION['user_id'] = (int)$user['id'];
+  $_SESSION['email'] = $user['email'];
+  $_SESSION['role'] = $user['role'];  // ← Para PermissionManager::getCurrentRole()
+  
+  // Legacy structure (deprecated)
   $_SESSION['user'] = [
     'id' => (int)$user['id'],
     'email' => $user['email'],

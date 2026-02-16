@@ -7,7 +7,7 @@ require_once __DIR__ . '/../models/AuditLogModel.php';
 
 class CheckinController {
   public static function door(): void {
-    require_role(['ADMIN','OPERATOR']);
+    require_role(ROLE_OPERATOR);
 
     $events = db()->query("SELECT id,nombre FROM events WHERE estado='PUBLISHED' ORDER BY fecha_inicio DESC")->fetchAll();
     $event_id = (int)($_GET['event_id'] ?? ($events[0]['id'] ?? 0));
@@ -18,7 +18,7 @@ class CheckinController {
   }
 
   public static function apiCheckin(): void {
-    require_role(['ADMIN','OPERATOR']);
+    require_role(ROLE_OPERATOR);
 
     $body = json_decode(file_get_contents('php://input'), true) ?? [];
     $token = trim((string)($body['token'] ?? ''));
