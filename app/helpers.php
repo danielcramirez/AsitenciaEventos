@@ -88,3 +88,69 @@ function validate_phone(string $phone): bool {
   if ($phone === '') return true;
   return (bool)preg_match('/^[0-9+() -]{6,30}$/', $phone);
 }
+
+function app_design_settings(): array {
+  static $settings = null;
+  if ($settings !== null) {
+    return $settings;
+  }
+
+  $defaults = [
+    'primary_color' => '#006838',
+    'primary_hover_color' => '#0D9A49',
+    'logo_path' => null,
+    'favicon_path' => null,
+    'menu_button_bg' => '#F5EB28',
+    'menu_button_text' => '#111111',
+    'menu_button_hover_bg' => '#F89621',
+    'menu_button_hover_text' => '#111111',
+    'menu_secondary_bg' => '#FFFFFF',
+    'menu_secondary_text' => '#111111',
+    'menu_secondary_hover_bg' => '#E9ECEF',
+    'menu_secondary_hover_text' => '#111111',
+    'menu_show_admin_eventos' => 1,
+    'menu_show_verificar_qr' => 1,
+    'menu_show_mis_referidos' => 1,
+    'menu_show_registro' => 1,
+    'menu_show_login' => 1,
+  ];
+
+  $modelFile = __DIR__ . '/../models/DesignSettingsModel.php';
+  if (!file_exists($modelFile)) {
+    $settings = $defaults;
+    return $settings;
+  }
+
+  require_once $modelFile;
+  if (!class_exists('DesignSettingsModel')) {
+    $settings = $defaults;
+    return $settings;
+  }
+
+  try {
+    $raw = DesignSettingsModel::get();
+    $settings = array_merge($defaults, $raw);
+  } catch (Throwable $e) {
+    $settings = $defaults;
+  }
+
+  $colorKeys = [
+    'primary_color',
+    'primary_hover_color',
+    'menu_button_bg',
+    'menu_button_text',
+    'menu_button_hover_bg',
+    'menu_button_hover_text',
+    'menu_secondary_bg',
+    'menu_secondary_text',
+    'menu_secondary_hover_bg',
+    'menu_secondary_hover_text',
+  ];
+  foreach ($colorKeys as $key) {
+    if (!preg_match('/^#[0-9A-Fa-f]{6}$/', (string)($settings[$key] ?? ''))) {
+      $settings[$key] = $defaults[$key];
+    }
+  }
+
+  return $settings;
+}

@@ -111,6 +111,33 @@ CREATE TABLE checkins (
   FOREIGN KEY (operator_user_id) REFERENCES users(id)
 );
 
+CREATE TABLE design_settings (
+  id TINYINT NOT NULL PRIMARY KEY,
+  primary_color CHAR(7) NOT NULL DEFAULT '#006838',
+  primary_hover_color CHAR(7) NOT NULL DEFAULT '#0D9A49',
+  logo_path VARCHAR(255) NULL,
+  favicon_path VARCHAR(255) NULL,
+  menu_button_bg CHAR(7) NOT NULL DEFAULT '#F5EB28',
+  menu_button_text CHAR(7) NOT NULL DEFAULT '#111111',
+  menu_button_hover_bg CHAR(7) NOT NULL DEFAULT '#F89621',
+  menu_button_hover_text CHAR(7) NOT NULL DEFAULT '#111111',
+  menu_secondary_bg CHAR(7) NOT NULL DEFAULT '#FFFFFF',
+  menu_secondary_text CHAR(7) NOT NULL DEFAULT '#111111',
+  menu_secondary_hover_bg CHAR(7) NOT NULL DEFAULT '#E9ECEF',
+  menu_secondary_hover_text CHAR(7) NOT NULL DEFAULT '#111111',
+  menu_show_admin_eventos TINYINT(1) NOT NULL DEFAULT 1,
+  menu_show_verificar_qr TINYINT(1) NOT NULL DEFAULT 1,
+  menu_show_mis_referidos TINYINT(1) NOT NULL DEFAULT 1,
+  menu_show_registro TINYINT(1) NOT NULL DEFAULT 1,
+  menu_show_login TINYINT(1) NOT NULL DEFAULT 1,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+INSERT INTO design_settings (
+  id, primary_color, primary_hover_color, menu_show_admin_eventos, menu_show_verificar_qr,
+  menu_show_mis_referidos, menu_show_registro, menu_show_login
+) VALUES (1, '#006838', '#0D9A49', 1, 1, 1, 1, 1);
+
 -- Usuario admin inicial (password: Admin123*)
 INSERT INTO users(email,password_hash,role) VALUES
 ('admin@local', '$2y$10$r.GRXmkyeQEeFi.n.5lGkegyZjpxjZOILC3P.MB/UHQkbQ7f56vTO', 'ADMIN');

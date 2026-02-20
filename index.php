@@ -46,6 +46,7 @@ function parseRequest(): array {
         'logout' => ['controller' => 'auth', 'action' => 'logout'],
         'evento' => ['controller' => 'event', 'action' => 'show'],
         'admin_eventos' => ['controller' => 'event_admin', 'action' => 'index'],
+        'parametrizacion_diseno' => ['controller' => 'design_settings', 'action' => 'index'],
         'registrar' => ['controller' => 'registration', 'action' => 'register'],
         'consulta_qr' => ['controller' => 'qr', 'action' => 'consult'],
         'puerta' => ['controller' => 'checkin', 'action' => 'door'],
