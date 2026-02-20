@@ -5,8 +5,8 @@ require_once __DIR__ . '/../vendor/autoload.php';
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Writer\PngWriter;
 
-function h(string $s): string {
-  return htmlspecialchars($s, ENT_QUOTES, 'UTF-8');
+function h(?string $s): string {
+  return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8');
 }
 
 function csrf_token(): string {
@@ -31,15 +31,12 @@ function new_token(): string {
 }
 function generate_qr_base64(string $data): string {
   try {
-    $result = (new Builder(
-      writer: new PngWriter(),
-      data: $data,
-      size: 320,
-      margin: 10
-    ))->build();
+    $builder = new Builder(writer: new PngWriter());
+    $result = $builder->build(data: $data, size: 320, margin: 10);
     
     return 'data:image/png;base64,' . base64_encode($result->getString());
   } catch (Throwable $e) {
+    error_log('QR generation failed: ' . $e->getMessage());
     return '';
   }
 }
@@ -73,7 +70,10 @@ function render_error(string $message, int $code = 400): void {
 }
 
 function validate_email(string $email): bool {
-  return (bool)filter_var($email, FILTER_VALIDATE_EMAIL);
+  if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    return true;
+  }
+  return (bool)preg_match('/^[^@\s]+@[^@\s]+$/', $email);
 }
 
 function validate_cedula(string $cedula): bool {

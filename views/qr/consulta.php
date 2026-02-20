@@ -37,14 +37,22 @@
       <?php elseif (!$data): ?>
         <div class="alert alert-danger">No existe registro para esa cédula en este evento.</div>
       <?php else: ?>
+        <?php
+          $fullName = trim((string)($data['nombres'] ?? '') . ' ' . (string)($data['apellidos'] ?? ''));
+          $ced = (string)($data['cedula'] ?? '');
+          $status = (string)($data['status'] ?? '');
+          $checked = (int)($data['checked'] ?? 0);
+          $checkinAt = (string)($data['checkin_at'] ?? '');
+          $qrImage = (string)($data['qr_image_base64'] ?? '');
+        ?>
         <div class="row g-3">
           <div class="col-md-6">
             <div class="border rounded p-3 bg-white">
-              <div><strong>Nombre:</strong> <?= h($data['nombres'] . ' ' . $data['apellidos']) ?></div>
-              <div><strong>Cédula:</strong> <?= h($data['cedula']) ?></div>
-              <div><strong>Estado:</strong> <?= h($data['status']) ?></div>
+              <div><strong>Nombre:</strong> <?= h($fullName) ?></div>
+              <div><strong>Cédula:</strong> <?= h($ced) ?></div>
+              <div><strong>Estado:</strong> <?= h($status) ?></div>
               <div><strong>Asistencia:</strong>
-                <?= ((int)$data['checked'] > 0) ? 'YA INGRESÓ (' . h((string)$data['checkin_at']) . ')' : 'NO HA INGRESADO' ?>
+                <?= ($checked > 0) ? 'YA INGRESÓ (' . h($checkinAt) . ')' : 'NO HA INGRESADO' ?>
               </div>
             </div>
             <form class="mt-3" method="post">
@@ -56,11 +64,11 @@
             </form>
           </div>
           <div class="col-md-6 text-center">
-            <?php if (!empty($data['qr_image_base64'])): ?>
-              <img class="img-fluid" alt="QR" src="<?= $data['qr_image_base64'] ?>">
+            <?php if ($qrImage !== ''): ?>
+              <img class="img-fluid" alt="QR" src="<?= h($qrImage) ?>">
               <div class="small text-muted mt-2">Presenta este QR en la entrada.</div>
             <?php else: ?>
-              <div class="alert alert-warning">QR no disponible</div>
+              <div class="alert alert-warning">QR no disponible. Pulsa "Reemitir QR" para generarlo otra vez.</div>
             <?php endif; ?>
           </div>
         </div>

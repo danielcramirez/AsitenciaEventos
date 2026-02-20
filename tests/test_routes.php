@@ -269,26 +269,11 @@ $tester->test('Tabla checkins existe', function () {
     }
 });
 
-// Test 23: Todos los entry points existen
-$tester->test('Todos los entry points (routes) existen', function () {
-    $routes = [
-        'index.php',
-        'login.php',
-        'logout.php',
-        'evento.php',
-        'admin_eventos.php',
-        'registrar.php',
-        'consulta_qr.php',
-        'puerta.php',
-        'api_checkin.php',
-        'reporte.php',
-        'export_csv.php',
-    ];
-    foreach ($routes as $route) {
-        $path = __DIR__ . '/../' . $route;
-        if (!file_exists($path)) {
-            throw new Exception("Missing route: $route");
-        }
+// Test 23: Router único existe
+$tester->test('Entry point central (index.php) existe', function () {
+    $path = __DIR__ . '/../index.php';
+    if (!file_exists($path)) {
+        throw new Exception('Missing route: index.php');
     }
 });
 

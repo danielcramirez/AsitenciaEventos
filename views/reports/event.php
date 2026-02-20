@@ -12,4 +12,4 @@
   </div></div></div>
 </div>
 
-<a class="btn btn-outline-dark" href="<?= BASE_URL ?>/export_csv.php?event_id=<?= (int)$event['id'] ?>">Exportar CSV</a>
+<a class="btn btn-outline-dark" href="<?= BASE_URL ?>/export_csv?event_id=<?= (int)$event['id'] ?>">Exportar CSV</a>

@@ -32,9 +32,12 @@ function parseRequest(): array {
         return ['controller' => 'home', 'action' => 'index'];
     }
     
-    // Parsear path/action?params
+    // Parsear path/action?params y soportar compatibilidad legacy *.php
     $segments = explode('/', $path);
     $route = array_shift($segments);
+    if (str_ends_with($route, '.php')) {
+        $route = substr($route, 0, -4);
+    }
     
     // Mapeo de rutas a controllers y acciones
     $routes = [
@@ -49,6 +52,8 @@ function parseRequest(): array {
         'api_checkin' => ['controller' => 'checkin', 'action' => 'apiCheckin'],
         'reporte' => ['controller' => 'report', 'action' => 'report'],
         'export_csv' => ['controller' => 'report', 'action' => 'exportCsv'],
+        'registro' => ['controller' => 'auth', 'action' => 'register'],
+        'mis_referidos' => ['controller' => 'referral', 'action' => 'index'],
     ];
     
     if (isset($routes[$route])) {
@@ -64,7 +69,8 @@ function parseRequest(): array {
  * Ejecutar controller con validación
  */
 function executeRoute(array $route): void {
-    $controller = ucfirst($route['controller']) . 'Controller';
+    $controllerBase = str_replace(' ', '', ucwords(str_replace('_', ' ', $route['controller'])));
+    $controller = $controllerBase . 'Controller';
     $action = $route['action'];
     
     $controllerFile = __DIR__ . '/controllers/' . $controller . '.php';

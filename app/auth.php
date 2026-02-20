@@ -2,7 +2,9 @@
 declare(strict_types=1);
 require_once __DIR__ . '/db.php';
 
-session_start();
+if (session_status() === PHP_SESSION_NONE && !headers_sent()) {
+  session_start();
+}
 
 function current_user(): ?array {
   return $_SESSION['user'] ?? null;
@@ -10,7 +12,7 @@ function current_user(): ?array {
 
 function require_login(): void {
   if (!current_user()) {
-    header('Location: ' . BASE_URL . '/login.php');
+    header('Location: ' . BASE_URL . '/login');
     exit;
   }
 }
@@ -39,6 +41,7 @@ function login_user(array $user): void {
     'id' => (int)$user['id'],
     'email' => $user['email'],
     'role' => $user['role'],
+    'referral_code' => $user['referral_code'] ?? null,
   ];
 }
 

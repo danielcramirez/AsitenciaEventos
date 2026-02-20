@@ -3,13 +3,15 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../core/bootstrap.php';
 require_once __DIR__ . '/../models/EventModel.php';
-require_once __DIR__ . '/../models/PersonModel.php';
 require_once __DIR__ . '/../models/RegistrationModel.php';
 require_once __DIR__ . '/../models/QrTokenModel.php';
 require_once __DIR__ . '/../models/AuditLogModel.php';
+require_once __DIR__ . '/../models/UserModel.php';
 
 class RegistrationController {
   public static function register(): void {
+    require_auth();
+
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
       render_error('Método no permitido', 405);
     }
@@ -17,23 +19,18 @@ class RegistrationController {
     csrf_check();
 
     $event_id = (int)($_POST['event_id'] ?? 0);
-    $cedula = trim((string)($_POST['cedula'] ?? ''));
-    $nombres = trim((string)($_POST['nombres'] ?? ''));
-    $apellidos = trim((string)($_POST['apellidos'] ?? ''));
-    $celular = trim((string)($_POST['celular'] ?? ''));
+    $u = current_user();
+    $person = UserModel::findPersonByUserId((int)$u['id']);
 
     if ($event_id <= 0) {
       render_error('Evento inválido', 400);
     }
-    if (!validate_cedula($cedula)) {
-      render_error('Cédula inválida', 400);
+    if (!$person) {
+      render_error('Usuario sin perfil personal. Complete su registro.', 400);
     }
-    if (!validate_name($nombres) || !validate_name($apellidos)) {
-      render_error('Nombre inválido', 400);
-    }
-    if (!validate_phone($celular)) {
-      render_error('Celular inválido', 400);
-    }
+
+    $cedula = (string)$person['cedula'];
+    $person_id = (int)$person['id'];
 
     $pdo = db();
     $pdo->beginTransaction();
@@ -43,8 +40,6 @@ class RegistrationController {
       if (!$event) {
         throw new RuntimeException('Evento no disponible');
       }
-
-      $person_id = PersonModel::upsert($cedula, $nombres, $apellidos, $celular ?: null);
 
       $reg = RegistrationModel::findByEventAndPerson($event_id, $person_id);
       if ($reg) {
@@ -62,12 +57,14 @@ class RegistrationController {
       $token = QrTokenModel::findByRegistrationId($registration_id);
       if (!$token) {
         QrTokenModel::create($registration_id);
+      } elseif (empty($token['qr_image_base64'])) {
+        QrTokenModel::rotate($registration_id);
       }
 
-      AuditLogModel::log('registration', null, $event_id, ['cedula' => $cedula]);
+      AuditLogModel::log('registration', (int)$u['id'], $event_id, ['cedula' => $cedula]);
       $pdo->commit();
 
-      header('Location: ' . BASE_URL . '/consulta_qr.php?event_id=' . $event_id . '&cedula=' . urlencode($cedula) . '&just=1');
+      header('Location: ' . BASE_URL . '/consulta_qr?event_id=' . $event_id . '&cedula=' . urlencode($cedula) . '&just=1');
       exit;
     } catch (Throwable $e) {
       $pdo->rollBack();

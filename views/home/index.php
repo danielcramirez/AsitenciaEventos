@@ -2,10 +2,13 @@
   <h3 class="mb-0">Eventos publicados</h3>
   <div class="d-flex gap-2">
     <?php if (current_user() && current_user()['role']==='ADMIN'): ?>
-      <a class="btn btn-brand" href="<?= BASE_URL ?>/admin_eventos.php">Administrar eventos</a>
+      <a class="btn btn-brand" href="<?= BASE_URL ?>/admin_eventos">Administrar eventos</a>
     <?php endif; ?>
     <?php if (current_user() && in_array(current_user()['role'], ['OPERATOR','ADMIN'], true)): ?>
-      <a class="btn btn-outline-dark" href="<?= BASE_URL ?>/puerta.php">Puerta (Check-in)</a>
+      <a class="btn btn-outline-dark" href="<?= BASE_URL ?>/puerta">Puerta (Check-in)</a>
+    <?php endif; ?>
+    <?php if (current_user() && current_user()['role'] === 'ENLACE'): ?>
+      <a class="btn btn-outline-warning" href="<?= BASE_URL ?>/mis_referidos">Mis referidos</a>
     <?php endif; ?>
   </div>
 </div>
@@ -19,8 +22,8 @@
           <div class="text-muted"><?= h($e['lugar'] ?? '') ?></div>
           <div class="small">Inicio: <?= h($e['fecha_inicio']) ?> · Fin: <?= h($e['fecha_fin']) ?></div>
           <div class="mt-3 d-flex gap-2">
-            <a class="btn btn-brand" href="<?= BASE_URL ?>/evento.php?id=<?= (int)$e['id'] ?>">Ver / Registrarme</a>
-            <a class="btn btn-outline-secondary" href="<?= BASE_URL ?>/consulta_qr.php?event_id=<?= (int)$e['id'] ?>">Consultar QR</a>
+            <a class="btn btn-brand" href="<?= BASE_URL ?>/evento?id=<?= (int)$e['id'] ?>">Ver / Registrarme</a>
+            <a class="btn btn-outline-secondary" href="<?= BASE_URL ?>/consulta_qr?event_id=<?= (int)$e['id'] ?>">Consultar QR</a>
           </div>
         </div>
       </div>

@@ -28,9 +28,8 @@ class HttpTester {
         try {
             $url = $this->baseUrl . '/' . ltrim($path, '/');
             
-            // Para GET, las pruebas reales requerirían un servidor activo
-            // Por ahora solo verificamos que el archivo existe y es accesible
-            $filePath = __DIR__ . '/../' . ltrim($path, '/');
+            // En arquitectura de router único, todo entra por index.php
+            $filePath = __DIR__ . '/../index.php';
             
             if (!file_exists($filePath)) {
                 throw new Exception("Archivo no existe: $path");
@@ -120,23 +119,26 @@ echo "\n" . COLOR_INFO . "=== INICIANDO PRUEBAS DE ENDPOINTS ===" . COLOR_RESET 
 $tester = new HttpTester('http://localhost/eventos');
 
 // ===== RUTAS / ENTRY POINTS =====
-$tester->testRoute('GET / (home)', 'index.php');
-$tester->testRoute('GET /login', 'login.php');
-$tester->testRoute('GET /logout', 'logout.php');
-$tester->testRoute('GET /evento (show event)', 'evento.php');
-$tester->testRoute('GET /admin_eventos', 'admin_eventos.php');
-$tester->testRoute('GET /registrar (register)', 'registrar.php');
-$tester->testRoute('GET /consulta_qr', 'consulta_qr.php');
-$tester->testRoute('GET /puerta (checkin door)', 'puerta.php');
-$tester->testRoute('POST /api_checkin', 'api_checkin.php');
-$tester->testRoute('GET /reporte', 'reporte.php');
-$tester->testRoute('GET /export_csv', 'export_csv.php');
+$tester->testRoute('GET / (home)', '/');
+$tester->testRoute('GET /login', '/login');
+$tester->testRoute('GET /registro', '/registro');
+$tester->testRoute('GET /logout', '/logout');
+$tester->testRoute('GET /evento', '/evento');
+$tester->testRoute('GET /admin_eventos', '/admin_eventos');
+$tester->testRoute('POST /registrar', '/registrar', 'POST');
+$tester->testRoute('GET /consulta_qr', '/consulta_qr');
+$tester->testRoute('GET /puerta', '/puerta');
+$tester->testRoute('POST /api_checkin', '/api_checkin', 'POST');
+$tester->testRoute('GET /reporte', '/reporte');
+$tester->testRoute('GET /export_csv', '/export_csv');
+$tester->testRoute('GET /mis_referidos', '/mis_referidos');
 
 echo "\n";
 
 // ===== CONTROLLERS =====
 $tester->testControllerMethod('HomeController::index()', 'HomeController', 'index');
 $tester->testControllerMethod('AuthController::login()', 'AuthController', 'login');
+$tester->testControllerMethod('AuthController::register()', 'AuthController', 'register');
 $tester->testControllerMethod('AuthController::logout()', 'AuthController', 'logout');
 $tester->testControllerMethod('EventController::show()', 'EventController', 'show');
 $tester->testControllerMethod('EventAdminController::index()', 'EventAdminController', 'index');
@@ -146,6 +148,7 @@ $tester->testControllerMethod('CheckinController::door()', 'CheckinController', 
 $tester->testControllerMethod('CheckinController::apiCheckin()', 'CheckinController', 'apiCheckin');
 $tester->testControllerMethod('ReportController::report()', 'ReportController', 'report');
 $tester->testControllerMethod('ReportController::exportCsv()', 'ReportController', 'exportCsv');
+$tester->testControllerMethod('ReferralController::index()', 'ReferralController', 'index');
 
 echo "\n";
 

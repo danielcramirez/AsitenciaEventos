@@ -83,12 +83,18 @@ class PermissionManager {
      * Require que el usuario tenga un rol específico
      */
     public static function requireRole(string $role): void {
-        if (self::getCurrentRole() !== $role) {
+        self::requireAuth();
+        $currentRole = self::getCurrentRole();
+        if ($currentRole === ROLE_ADMIN) {
+            return;
+        }
+
+        if ($currentRole !== $role) {
             http_response_code(403);
             Logger::getInstance()->warning("Rol insuficiente", [
                 'user_id' => self::getCurrentUserId(),
                 'required_role' => $role,
-                'current_role' => self::getCurrentRole(),
+                'current_role' => $currentRole,
                 'ip' => $_SERVER['REMOTE_ADDR'] ?? 'UNKNOWN',
             ]);
             exit('Acceso denegado: requiere rol ' . h($role));
@@ -117,6 +123,10 @@ class PermissionManager {
      * Require que el usuario tenga permiso para una acción
      */
     public static function requirePermission(string $action): void {
+        self::requireAuth();
+        if (self::isAdmin()) {
+            return;
+        }
         if (!self::hasPermission($action)) {
             http_response_code(403);
             exit('No tiene permiso para: ' . h($action));
@@ -188,7 +198,7 @@ class PermissionManager {
      * Verificar si el usuario puede ver QR ajenos
      */
     public static function canViewOthersQr(): bool {
-        return self::isAdmin();
+        return self::isAdmin() || self::isOperator();
     }
 }
 

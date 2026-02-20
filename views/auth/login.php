@@ -17,10 +17,12 @@
           </div>
           <button class="btn btn-brand w-100">Entrar</button>
         </form>
+        <a class="btn btn-outline-secondary w-100 mt-2" href="<?= BASE_URL ?>/registro">Crear cuenta de elector</a>
       </div>
     </div>
     <div class="small text-muted mt-3">
       Admin inicial: admin@local / Admin123*
+      <br>Enlace demo: enlace@local / Enlace123*
     </div>
   </div>
 </div>

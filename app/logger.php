@@ -19,7 +19,7 @@ class Logger {
 
     private static ?Logger $instance = null;
     private string $logDir;
-    private string $minLevel;
+    private int $minLevel;
     private array $levelNames = [
         100 => 'DEBUG',
         200 => 'INFO',

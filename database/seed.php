@@ -42,6 +42,23 @@ try {
     echo "   Role: OPERATOR\n\n";
   }
 
+  // Crear usuario enlace de ejemplo
+  $st = $pdo->prepare("SELECT id, referral_code FROM users WHERE email = ?");
+  $st->execute(['enlace@local']);
+  $enlace = $st->fetch();
+  if ($enlace) {
+    echo "⚠️  Usuario enlace@local ya existe. Saltando creación.\n";
+  } else {
+    $hash = password_hash('Enlace123*', PASSWORD_BCRYPT, ['cost' => 10]);
+    $codigo = 'ENLDEMO01';
+    $ins = $pdo->prepare("INSERT INTO users(email, password_hash, role, active, referral_code) VALUES(?, ?, ?, 1, ?)");
+    $ins->execute(['enlace@local', $hash, 'ENLACE', $codigo]);
+    echo "✅ Usuario ENLACE creado:\n";
+    echo "   Email: enlace@local\n";
+    echo "   Contraseña: Enlace123*\n";
+    echo "   Código referido: ENLDEMO01\n\n";
+  }
+
   // Crear evento de ejemplo
   $st = $pdo->prepare("SELECT id FROM events WHERE nombre = ?");
   $st->execute(['Conferencia de Tecnología 2026']);
@@ -118,6 +135,7 @@ try {
   echo "\n📝 Datos de ejemplo:\n";
   echo "   Admin: admin@local / Admin123*\n";
   echo "   Operador: operador@local / Operador123*\n";
+  echo "   Enlace: enlace@local / Enlace123* (codigo ENLDEMO01)\n";
   echo "   Evento: Conferencia de Tecnología 2026 (Conferencia)\n";
   echo "   Registro: 1234567890 - Juan Pérez\n";
 

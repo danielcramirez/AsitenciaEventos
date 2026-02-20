@@ -1,4 +1,7 @@
 <h3 class="mb-3">Administrar eventos</h3>
+<div class="mb-3">
+  <a class="btn btn-outline-dark" href="<?= BASE_URL ?>/puerta">Ir a verificar QR (Puerta)</a>
+</div>
 
 <div class="card shadow-sm mb-4">
   <div class="card-body">
@@ -57,8 +60,8 @@
             <td class="small"><?= h($e['fecha_inicio']) ?> → <?= h($e['fecha_fin']) ?></td>
             <td><span class="badge badge-brand"><?= h($e['estado']) ?></span></td>
             <td class="d-flex gap-2">
-              <a class="btn btn-sm btn-outline-secondary" href="<?= BASE_URL ?>/evento.php?id=<?= (int)$e['id'] ?>">Ver</a>
-              <a class="btn btn-sm btn-outline-dark" href="<?= BASE_URL ?>/reporte.php?event_id=<?= (int)$e['id'] ?>">Reporte</a>
+              <a class="btn btn-sm btn-outline-secondary" href="<?= BASE_URL ?>/evento?id=<?= (int)$e['id'] ?>">Ver</a>
+              <a class="btn btn-sm btn-outline-dark" href="<?= BASE_URL ?>/reporte?event_id=<?= (int)$e['id'] ?>">Reporte</a>
             </td>
           </tr>
         <?php endforeach; ?>

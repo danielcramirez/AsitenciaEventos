@@ -4,12 +4,8 @@ declare(strict_types=1);
 require_once __DIR__ . '/env.php';
 
 // ============================================
-// Base de Datos (desde .env)
+// Base de Datos
 // ============================================
-const DB_HOST = null;     // Usar EnvLoader::get('DB_HOST')
-const DB_NAME = null;     // Usar EnvLoader::get('DB_NAME')
-const DB_USER = null;     // Usar EnvLoader::get('DB_USER')
-const DB_PASS = null;     // Usar EnvLoader::get('DB_PASS')
 const DB_CHARSET = 'utf8mb4';
 
 // Valores desde .env con fallback
@@ -23,36 +19,36 @@ function getDbConfig(string $key, string $default = ''): string {
     return EnvLoader::get($map[$key] ?? $key, $default);
 }
 
-// ============================================
-// Aplicación (desde .env)
-// ============================================
-const APP_NAME = null;    // Usar EnvLoader::get('APP_NAME')
-const APP_ENV = null;     // Usar EnvLoader::get('APP_ENV')
-const APP_DEBUG = null;   // Usar EnvLoader::getBool('APP_DEBUG')
 const BASE_URL = '/eventos';
+const APP_NAME = 'Sistema de Gestion de Eventos';
+const APP_ENV = 'development';
+const APP_DEBUG = true;
 
 // ============================================
-// Seguridad (desde .env)
+// Seguridad
 // ============================================
-const LOGIN_MAX_ATTEMPTS = null;     // Usar EnvLoader::getInt('LOGIN_MAX_ATTEMPTS')
-const LOGIN_LOCK_DURATION = null;    // Usar EnvLoader::getInt('LOGIN_LOCK_DURATION')
-const LOGIN_BLOCK_MINUTES = 15;      // Fallback si no está en .env
+const LOGIN_MAX_ATTEMPTS = 5;
+const LOGIN_LOCK_DURATION = 900;
+const LOGIN_BLOCK_MINUTES = 15;
 
-const RATE_LIMIT_QR_CHECKS = null;   // Usar EnvLoader::getInt('RATE_LIMIT_QR_CHECKS')
-const RATE_LIMIT_QR_WINDOW = null;   // Usar EnvLoader::getInt('RATE_LIMIT_QR_WINDOW')
+const RATE_LIMIT_QR_CHECKS = 10;
+const RATE_LIMIT_QR_WINDOW = 300;
 
-const QR_RATE_LIMIT_MAX = 5;         // Fallback deprecated
-const QR_RATE_LIMIT_WINDOW = 60;
+const QR_RATE_LIMIT_MAX = RATE_LIMIT_QR_CHECKS;
+const QR_RATE_LIMIT_WINDOW = RATE_LIMIT_QR_WINDOW;
 
 const TOKEN_MIN_LEN = 20;
 
 // ============================================
 // Permisos y Roles
 // ============================================
-const DEFAULT_ROLE = 'ATTENDEE';
 const ROLE_ADMIN = 'ADMIN';
 const ROLE_OPERATOR = 'OPERATOR';
-const ROLE_GUEST = 'ATTENDEE';
+const ROLE_ENLACE = 'ENLACE';
+const ROLE_ELECTOR = 'ELECTOR';
+const ROLE_ATTENDEE = 'ATTENDEE';
+const ROLE_GUEST = 'GUEST';
+const DEFAULT_ROLE = ROLE_ELECTOR;
 
 // Permisos por rol
 const ROLE_PERMISSIONS = [
@@ -68,10 +64,28 @@ const ROLE_PERMISSIONS = [
         'reporte' => true,             // Ver reportes propios
         'consulta_qr' => false,        // No puede ver QR ajenos
     ],
+    'ENLACE' => [
+        'registrar' => true,
+        'consulta_qr' => true,
+        'evento' => true,
+        'mis_referidos' => true,
+    ],
+    'ELECTOR' => [
+        'registrar' => true,
+        'consulta_qr' => true,
+        'evento' => true,
+        'mis_referidos' => false,
+    ],
     'ATTENDEE' => [
         'registrar' => true,           // Registrarse
         'consulta_qr' => true,         // Ver su QR
         'evento' => true,              // Ver evento
+    ],
+    'GUEST' => [
+        'registrar' => false,
+        'consulta_qr' => false,
+        'evento' => false,
+        'mis_referidos' => false,
     ],
 ];
 

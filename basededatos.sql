@@ -5,8 +5,10 @@ CREATE TABLE users (
   id INT AUTO_INCREMENT PRIMARY KEY,
   email VARCHAR(120) NOT NULL UNIQUE,
   password_hash VARCHAR(255) NOT NULL,
-  role ENUM('ADMIN','OPERATOR','ATTENDEE') NOT NULL,
+  role ENUM('ADMIN','OPERATOR','ENLACE','ELECTOR','ATTENDEE') NOT NULL,
   active TINYINT(1) NOT NULL DEFAULT 1,
+  referred_by_user_id INT NULL,
+  referral_code VARCHAR(24) NULL UNIQUE,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -28,6 +30,10 @@ CREATE TABLE user_person (
   FOREIGN KEY (user_id) REFERENCES users(id),
   FOREIGN KEY (person_id) REFERENCES persons(id)
 );
+
+ALTER TABLE users
+  ADD CONSTRAINT fk_users_referred_by
+  FOREIGN KEY (referred_by_user_id) REFERENCES users(id);
 
 CREATE TABLE events (
   id INT AUTO_INCREMENT PRIMARY KEY,

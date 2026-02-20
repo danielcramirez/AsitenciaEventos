@@ -28,13 +28,20 @@ $title = $title ?? APP_NAME;
 <body class="bg-light">
 <nav class="navbar navbar-expand-lg navbar-dark" style="background:var(--brand);">
   <div class="container">
-    <a class="navbar-brand" href="<?= BASE_URL ?>/index.php"><?= h(APP_NAME) ?></a>
+    <a class="navbar-brand" href="<?= BASE_URL ?>/"><?= h(APP_NAME) ?></a>
     <div class="ms-auto d-flex gap-2">
       <?php if (current_user()): ?>
+        <?php if (in_array((string)current_user()['role'], [ROLE_OPERATOR, ROLE_ADMIN], true)): ?>
+          <a class="btn btn-sm btn-warning" href="<?= BASE_URL ?>/puerta">Verificar QR</a>
+        <?php endif; ?>
+        <?php if (in_array((string)current_user()['role'], [ROLE_ENLACE, ROLE_ADMIN], true)): ?>
+          <a class="btn btn-sm btn-warning" href="<?= BASE_URL ?>/mis_referidos">Mis referidos</a>
+        <?php endif; ?>
         <span class="navbar-text me-2"><?= h(current_user()['email']) ?> (<?= h(current_user()['role']) ?>)</span>
-        <a class="btn btn-sm btn-light" href="<?= BASE_URL ?>/logout.php">Salir</a>
+        <a class="btn btn-sm btn-light" href="<?= BASE_URL ?>/logout">Salir</a>
       <?php else: ?>
-        <a class="btn btn-sm btn-light" href="<?= BASE_URL ?>/login.php">Ingresar</a>
+        <a class="btn btn-sm btn-light" href="<?= BASE_URL ?>/registro">Registro</a>
+        <a class="btn btn-sm btn-light" href="<?= BASE_URL ?>/login">Ingresar</a>
       <?php endif; ?>
     </div>
   </div>
